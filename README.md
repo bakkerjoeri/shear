@@ -1,4 +1,4 @@
-# `shear`
+# 🍂 `shear`
 
 `shear` is a node CLI tool that helps you find potentially unused twig templates.
 
