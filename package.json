@@ -1,0 +1,19 @@
+{
+  "name": "shear",
+  "version": "0.0.1",
+  "description": "Find unused twig templates.",
+  "main": "src/shear.js",
+  "author": "Joeri Bakker <bakkerjoeri@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "shear": "./bin/shear"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bakkerjoeri/shear.git"
+  },
+  "dependencies": {
+    "glob": "7.1.2",
+    "yargs": "11.0.0"
+  }
+}
