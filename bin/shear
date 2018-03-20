@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+const shear = require('../src/shear.js');
+
+shear();
