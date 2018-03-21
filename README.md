@@ -9,24 +9,8 @@ npm install -g shear
 
 ## Usage
 
-### `shear prune`
+### `shear prune [templates..] [-s [sources..]]`
 `shear prune` helps you find potentially unused templates.
-
-```
-shear prune [templates..]
-
-Find potentially unused templates.
-
-Positionals:
-  templates  Template file patterns to find usage of.
-                                                [array] [default: ["**/*.twig"]]
-
-Options:
-  -h, --help     Show help                                             [boolean]
-  -f, --from     Template file patterns to search in.
-                                                [array] [default: ["**/*.twig"]]
-  -v, --version  Show version number                                   [boolean]
-```
 
 Simply running `shear prune` without any arguments will report any twig files not found to be used in any other twig files in the project.
 
@@ -35,6 +19,7 @@ shear prune
 ```
 
 A report typically looks like this:
+
 ```
 Found 2 potentially unused templates:
 - button-purchase.twig
@@ -43,7 +28,21 @@ Found 2 potentially unused templates:
 
 Note that it reports *potentially* unused templates. `shear` can't recognize any dynamic template inclusion, extension or embedding (using string concatenation, for instance), so you need to double check the reported results to be certain it's never used.
 
-Optionally, you can define patterns for both `templates` and the source wherein to look for their inclusion:
+The optional `-s` or `--source` flag takes a list of filepatterns to search in for usage:
+
 ```
-shear prune components/**/*.twig --from pages/**/*.twig
+shear prune components/**/*.twig --source pages/**/*.twig
+```
+
+### `shear inspect <template> [-s [source..]]`
+`shear inspect` reports a list of templates that are probably using it.
+
+```
+shear inspect components/button.twig
+```
+
+The optional `-s` or `--source` flag takes a list of filepatterns to search in for usage:
+
+```
+shear inspect components/button.twig -s pages/**/*.twig
 ```
