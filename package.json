@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bakkerjoeri/shear.git"
+    "url": "https://github.com/joeribakker/shear.git"
   },
   "dependencies": {
     "glob": "7.1.2",
