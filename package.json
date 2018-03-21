@@ -1,10 +1,11 @@
 {
   "name": "shear",
   "version": "0.0.1",
-  "description": "Find unused twig templates.",
+  "description": "Find usage of twig templates.",
   "main": "src/shear.js",
   "author": "Joeri Bakker <bakkerjoeri@gmail.com>",
   "license": "MIT",
+  "preferGlobal": true,
   "bin": {
     "shear": "./bin/shear"
   },
