@@ -2,91 +2,103 @@ const path = require('path');
 const glob = require('glob');
 const fs =   require('fs');
 
-function prune(templatePatterns, fromPatterns) {
-    let fromPaths = [];
-    fromPatterns.forEach((pattern) => {
-        fromPaths = [
-            ...fromPaths,
-            ...glob.sync(path.resolve(process.cwd(), pattern)),
-        ];
-    });
+class File {
+    constructor(filepath) {
+        if (!fs.existsSync(filepath)) {
+            throw new Error(`No file '${filepath}' found.`);
+        }
+        
+        this.filepath = filepath;
+    }
     
-    let fromContents = fromPaths.map((filepath) => {
-        return fs.readFileSync(filepath, 'utf8');
-    });
+    getName() {
+        return path.basename(this.filepath).split('.')[0];
+    }
     
-    let templatePaths = [];
-    templatePatterns.forEach((pattern) => {
-        templatePaths = [
-            ...templatePaths, 
-            ...glob.sync(path.resolve(process.cwd(), pattern)),
-        ];
-    });
+    getContents() {
+        if (!this.contents) {
+            this.contents = fs.readFileSync(this.filepath, 'utf8');
+        }
+        
+        return this.contents;
+    }
+}
+
+function prune(templatePatterns, sourcePatterns) {
+    let templates = getAllFilesFromPatterns(templatePatterns);
+    let sources = getAllFilesFromPatterns(sourcePatterns);
     
-    let unusedTemplatePaths = [...templatePaths];
-    
-    console.log(`Checking usage of ${templatePaths.length} templates...`);
-    fromContents.forEach((contents) => {
-        unusedTemplatePaths = unusedTemplatePaths.filter((filepath) => {
-            let filename = path.basename(filepath).split('.')[0];
-            
-            return contents.indexOf(filename) === -1;
+    // Find any unused templates by filtering out any matches to source contents.
+    let unusedTemplates = [...templates];
+    sources.forEach((source) => {
+        unusedTemplates = unusedTemplates.filter((template) => {
+            return !isTemplateUsedInSource(template, source);
         });
     });
     
-    if (unusedTemplatePaths.length) {
-        console.log(`Found ${unusedTemplatePaths.length} potentially unused templates:`);
+    // Report the results
+    if (unusedTemplates.length === 0) {
+        console.log('No unused templates found.');
+    } else {
+        console.log(`Found ${unusedTemplates.length} potentially unused templates:`);
         
-        unusedTemplatePaths.forEach((unusedTemplatePath) => {
-            console.log(`- ${path.basename(unusedTemplatePath)}`);
+        unusedTemplates.forEach((unusedTemplate) => {
+            console.log(`- ${path.basename(unusedTemplate.filepath)}`);
         });
     }
 }
 
-function inspect(templatePath, fromPatterns) {
-    if (typeof templatePath !== 'string') {
-        console.error(`Expected templatePath to be a 'string', but found '${typeof templatePath}'.`);
-        return;
-    }
+function inspect(templatePath, sourcePatterns) {
+    let template = new File(templatePath);
+    let sources = getAllFilesFromPatterns(sourcePatterns);
     
-    if (!fs.existsSync(templatePath)) {
-        console.error(`No file '${templatePath}' found.`);
-        return;
-    }
-    
-    console.log(`Inspecting file ${templatePath}`);
-
-    let fromPaths = [];
-    fromPatterns.forEach((pattern) => {
-        fromPaths = [
-            ...fromPaths,
-            ...glob.sync(path.resolve(process.cwd(), pattern)),
-        ];
+    // Find sources where the template is used.
+    sourcesUsingTemplate = sources.filter((source) => {
+        return isTemplateUsedInSource(template, source);
     });
     
-    let fromTemplates = fromPaths.map((filepath) => {
-        return {
-            path: filepath,
-            contents: fs.readFileSync(filepath, 'utf8')
-        };
-    });
-    
-    sourcesUsingTemplate = fromTemplates.filter((fromTemplate) => {
-        let filename = path.basename(templatePath).split('.')[0];
-        
-        return fromTemplate.contents.indexOf(filename) !== -1;
-    })
-    
+    // Report the results.
     if (sourcesUsingTemplate.length === 0) {
         console.log(`${templatePath} seems te be unused.`);
     } else {
-        console.log(`Used in ${sourcesUsingTemplate.length} templates:`);
+        console.log(`Usage of '${templatePath}' found in ${sourcesUsingTemplate.length} templates:`);
         
         sourcesUsingTemplate.forEach((source) => {
-            console.log(`- ${path.basename(source.path)}`);
+            console.log(`- ${path.basename(source.filepath)}`);
         });
     }
+}
+
+function foundUsageOfTemplateInContents(template, sourceTemplate) {
+    return sourceTemplate.contents.indexOf(templateName) !== -1;
+}
+
+function isTemplateUsedInSource(template, source) {
+    return source.getContents().indexOf(template.getName()) !== -1;
+}
+
+function getAllPathsFromPatterns(patterns) {
+    let paths = [];
     
+    patterns.forEach((pattern) => {
+        paths = [...paths, ...glob.sync(pattern)];
+    });
+    
+    return paths;
+}
+
+function getAllFilesFromPatterns(patterns) {
+    let paths = [];
+
+    patterns.forEach((pattern) => {
+        paths = [...paths, ...glob.sync(pattern)];
+    });
+    
+    let files = paths.map((path) => {
+        return new File(path);
+    });
+    
+    return files;
 }
 
 module.exports = {
