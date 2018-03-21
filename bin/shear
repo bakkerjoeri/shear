@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-const path = require('path');
-const yargs            = require('yargs');
-const {prune, inspect} = require('../src/shear.js');
+const path    = require('path');
+const yargs   = require('yargs');
+const prune   = require('../src/prune.js');
+const inspect = require('../src/inspect.js');
 
 const argv = yargs.usage('Usage: $0 <command> [options]')
     .command({
@@ -16,18 +17,18 @@ const argv = yargs.usage('Usage: $0 <command> [options]')
                     return path.resolve(process.cwd(), pattern);
                 })
             })
-            .option('f', {
-                alias: 'from',
+            .option('s', {
+                alias: 'source',
                 default: ['**/*.twig'],
                 demandOption: false,
                 desc: 'Template file patterns to search in.',
                 type: 'array',
-                coerce: (from) => from.map((pattern) => {
+                coerce: (source) => source.map((pattern) => {
                     return path.resolve(process.cwd(), pattern);
                 })
             }),
         handler: (argv) => {
-            prune(argv.templates, argv.from);
+            prune(argv.templates, argv.source);
         },
     })
     .command({
@@ -37,17 +38,17 @@ const argv = yargs.usage('Usage: $0 <command> [options]')
             .positional('template', {
                 type: 'string',
             })
-            .option('f', {
-                alias: 'from',
+            .option('s', {
+                alias: 'source',
                 demandOption: false,
                 default: ['**/*.twig'],
                 type: 'array',
-                coerce: (from) => from.map((pattern) => {
+                coerce: (source) => source.map((pattern) => {
                     return path.resolve(process.cwd(), pattern);
                 })
             }),
         handler: (argv) => {
-            inspect(argv.template, argv.from);
+            inspect(argv.template, argv.source);
         },
     })
     .help('h')
