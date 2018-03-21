@@ -1,4 +1,59 @@
 #!/usr/bin/env node
-const shear = require('../src/shear.js');
+const path = require('path');
+const yargs            = require('yargs');
+const {prune, inspect} = require('../src/shear.js');
 
-shear();
+const argv = yargs.usage('Usage: $0 <command> [options]')
+    .command({
+        command: 'prune [templates..]',
+        desc: 'Find potentially unused templates.',
+        builder: (yargs) => yargs
+            .positional('templates', {
+                default: ['**/*.twig'],
+                desc: 'Template file patterns to find usage of.',
+                type: 'array',
+                coerce: (templates) => templates.map((pattern) => {
+                    return path.resolve(process.cwd(), pattern);
+                })
+            })
+            .option('f', {
+                alias: 'from',
+                default: ['**/*.twig'],
+                demandOption: false,
+                desc: 'Template file patterns to search in.',
+                type: 'array',
+                coerce: (from) => from.map((pattern) => {
+                    return path.resolve(process.cwd(), pattern);
+                })
+            }),
+        handler: (argv) => {
+            prune(argv.templates, argv.from);
+        },
+    })
+    .command({
+        command: 'inspect <template>',
+        desc: 'Inspect a specific template file.',
+        builder: (yargs) => yargs
+            .positional('template', {
+                type: 'string',
+            })
+            .option('f', {
+                alias: 'from',
+                demandOption: false,
+                default: ['**/*.twig'],
+                type: 'array',
+                coerce: (from) => from.map((pattern) => {
+                    return path.resolve(process.cwd(), pattern);
+                })
+            }),
+        handler: (argv) => {
+            inspect(argv.template, argv.from);
+        },
+    })
+    .help('h')
+    .alias('h', 'help')
+    .version('h')
+    .alias('v', 'version')
+    .argv;
+
+// console.log(argv);
