@@ -1,6 +1,6 @@
 {
   "name": "shear",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Find usage of twig templates.",
   "main": "src/shear.js",
   "author": "Joeri Bakker <bakkerjoeri@gmail.com>",
