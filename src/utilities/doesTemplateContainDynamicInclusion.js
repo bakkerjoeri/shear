@@ -5,7 +5,7 @@
  * @return {Boolean}
  */
 function doesTemplateContainDynamicInclusion(template) {
-    let includePattern = /^{% (?:include|extends|embed).* ((?:[^'"]\w+[^'"])|~)+ .*%}$/gm;
+    let includePattern = /^{% (?:include|extend|embed).* ((?:[^'"]\w+[^'"])|~)+ .*$/gm;
     
     return includePattern.test(template.getContents());
 }
