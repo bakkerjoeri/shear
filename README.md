@@ -46,3 +46,16 @@ The optional `-s` or `--source` flag takes a list of filepatterns to search in f
 ```
 shear inspect components/button.twig -s pages/**/*.twig
 ```
+
+### `shear dynamic [-s | --source [source..]]`
+`shear dynamic` reports a list of all templates in a project that contain concatenated or variable `include`, `embed` or `extends`.
+
+```
+shear dynamic
+```
+
+The optional `-s` or `--source` flag takes a list of filepatterns to search in for dynamic inclusion:
+
+```
+shear dynamic -s pages/**/*.twig
+```
