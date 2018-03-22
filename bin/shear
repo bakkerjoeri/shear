@@ -4,6 +4,7 @@ const yargs   = require('yargs');
 const prune   = require('../src/prune.js');
 const inspect = require('../src/inspect.js');
 const dynamic = require('../src/dynamic.js');
+const missing = require('../src/missing.js');
 
 const argv = yargs.usage('Usage: $0 <command> [options]')
     .command({
@@ -69,6 +70,30 @@ const argv = yargs.usage('Usage: $0 <command> [options]')
             }),
         handler: (argv) => {
             dynamic(argv.source);
+        },
+    })
+    .command({
+        command: 'missing',
+        desc: 'Find non-existent inclusions.',
+        builder: (yargs) => yargs
+            .option('s', {
+                alias: 'source',
+                demandOption: false,
+                default: ['**/*.twig'],
+                type: 'array',
+                coerce: (source) => source.map((pattern) => {
+                    return path.resolve(process.cwd(), pattern);
+                })
+            })
+            .option('r', {
+                alias: 'root',
+                demandOption: false,
+                default: '',
+                type: 'string',
+                coerce: (root) => path.resolve(process.cwd(), root),
+            }),
+        handler: (argv) => {
+            missing(argv.source, argv.root);
         },
     })
     .help('h')
