@@ -76,5 +76,3 @@ const argv = yargs.usage('Usage: $0 <command> [options]')
     .version('h')
     .alias('v', 'version')
     .argv;
-
-// console.log(argv);
