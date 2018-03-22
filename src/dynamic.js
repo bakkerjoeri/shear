@@ -1,5 +1,6 @@
-const getAllFilesFromPatterns             = require('./utilities/getAllFilesFromPatterns.js');
 const doesTemplateContainDynamicInclusion = require('./utilities/doesTemplateContainDynamicInclusion.js');
+const getAllFilesFromPatterns             = require('./utilities/getAllFilesFromPatterns.js');
+const path                                = require('path');
 
 /**
  * Report templates with possible dynamic inclusions.
