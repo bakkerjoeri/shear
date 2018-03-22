@@ -9,7 +9,7 @@ npm install -g shear
 
 ## Usage
 
-### `shear prune [templates..] [-s | --source [sources..]]`
+### `shear prune [-t | --templates [templates..]] [-s | --source [source..]]`
 `shear prune` helps you find potentially unused templates.
 
 Simply running `shear prune` without any arguments will report any twig files not found to be used in any other twig files in the project.
