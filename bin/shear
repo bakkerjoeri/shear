@@ -7,11 +7,13 @@ const dynamic = require('../src/dynamic.js');
 
 const argv = yargs.usage('Usage: $0 <command> [options]')
     .command({
-        command: 'prune [templates..]',
+        command: 'prune',
         desc: 'Find potentially unused templates.',
         builder: (yargs) => yargs
-            .positional('templates', {
+            .option('t', {
+                alias: 'templates',
                 default: ['**/*.twig'],
+                demandOption: false,
                 desc: 'Template file patterns to find usage of.',
                 type: 'array',
                 coerce: (templates) => templates.map((pattern) => {
@@ -74,5 +76,3 @@ const argv = yargs.usage('Usage: $0 <command> [options]')
     .version('h')
     .alias('v', 'version')
     .argv;
-
-// console.log(argv);
