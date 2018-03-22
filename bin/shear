@@ -3,6 +3,7 @@ const path    = require('path');
 const yargs   = require('yargs');
 const prune   = require('../src/prune.js');
 const inspect = require('../src/inspect.js');
+const dynamic = require('../src/dynamic.js');
 
 const argv = yargs.usage('Usage: $0 <command> [options]')
     .command({
@@ -49,6 +50,23 @@ const argv = yargs.usage('Usage: $0 <command> [options]')
             }),
         handler: (argv) => {
             inspect(argv.template, argv.source);
+        },
+    })
+    .command({
+        command: 'dynamic',
+        desc: 'Find dynamic inclusions.',
+        builder: (yargs) => yargs
+            .option('s', {
+                alias: 'source',
+                demandOption: false,
+                default: ['**/*.twig'],
+                type: 'array',
+                coerce: (source) => source.map((pattern) => {
+                    return path.resolve(process.cwd(), pattern);
+                })
+            }),
+        handler: (argv) => {
+            dynamic(argv.source);
         },
     })
     .help('h')
