@@ -28,10 +28,10 @@ Found 2 potentially unused templates:
 
 Note that it reports *potentially* unused templates. `shear` can't recognize any dynamic template inclusion, extension or embedding (using string concatenation, for instance), so you need to double check the reported results to be certain it's never used.
 
-The optional `-s` or `--source` flag takes a list of filepatterns to search in for usage:
+The optional `-t` or `--templates` flag takes a list of filepatterns to find the usage of. The optional `-s` or `--source` flag takes a list of filepatterns to search in for usage:
 
 ```
-shear prune components/**/*.twig --source pages/**/*.twig
+shear prune --templates components/**/*.twig --source pages/**/*.twig
 ```
 
 ### `shear inspect <template> [-s | --source [source..]]`
