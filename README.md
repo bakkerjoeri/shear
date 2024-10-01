@@ -1,3 +1,7 @@
+> **Note**
+> 
+> This repository is no longer maintained and the `shear` npm package ownership has been transferred.
+
 # `shear`
 
 `shear` is a node CLI tool that helps you find usage of twig templates.
